@@ -6,12 +6,11 @@ HEIGHT = 540
 robot = Actor('changyutgich', (WIDTH / 2, HEIGHT / 2))
 robot.scale = 0.3
 robot.angle = 90
-robot.pen_init((WIDTH, HEIGHT))
+robot.brush_init((WIDTH, HEIGHT), 50, 'white')
 
 def draw():
     screen.blit('pol', (0, 0))
-    robot.pen_start(50, 'white')
-    robot.pen_update()
+    robot.brush_draw()
     robot.draw()
 
 def update():

@@ -12,6 +12,13 @@ bird_alive = True
 score = 0
 PIPE_SPEED = 3
 
+# O'yinning aktyotrlarning obyektini yaratish
+flappy_bird = Actor('bird1', (75, 350))
+flappy_bird.images = ['bird0', 'bird1', 'bird2']
+flappy_bird.fps = 10
+top_pipe = Actor('top', (350, 0))
+bottom_pipe = Actor('bottom', (350, top_pipe.height + GAP))
+
 def draw():
     screen.blit('background', (0, 0))
     flappy_bird.draw()
@@ -75,10 +82,3 @@ def on_key_down():
     global drop_speed
     if bird_alive == True:
         drop_speed = -5
-
-# O'yinning aktyotrlarning obyektini yaratish
-flappy_bird = Actor('bird1', (75, 350))
-flappy_bird.images = ['bird0', 'bird1', 'bird2']
-flappy_bird.fps = 10
-top_pipe = Actor('top', (350, 0))
-bottom_pipe = Actor('bottom', (350, top_pipe.height + GAP))

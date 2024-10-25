@@ -4,36 +4,53 @@ WIDTH = 960
 HEIGHT = 540
 
 xazina = Actor("xazina_sandig'i", (WIDTH / 2, HEIGHT / 2))
-input_box = Rect(350, 400, 200, 50)
-user_text = ''
-input_done = False
+xazina.images = ["xazina_sandig'i", "xazina_sandig'i_o"]
 
-parol = '1234'
+input_text = ""
+input_done = False
+input_rect = Rect(350, 450, 200, 50)
+
+guide_rect = Rect(300, 50, 400, 50)
+parol = "1234"
+
 
 def draw():
     screen.blit("cho'l", (0, 0))
     xazina.draw()
-    xazina.say("Parolingizni kiriting!", (500, 50))
-    screen.draw.filled_rect(input_box,'pink')
-    ptext.drawbox(user_text, input_box)
-
+    
+    # Tushuntirish textbox
+    screen.draw.filled_rect(guide_rect, 'black')
     if input_done:
-        if user_text == parol:
-            xazina.say("Xazinaga ega bo'ldingiz!", (500, 50), background='white', color='black')
-            sounds.olqish.play()
-            game.exit()
+        if input_text == password:
+            screen.draw.textbox("Xazinaga ega bo'ldingiz!", guide_rect)
         else:
-            xazina.say("Oishga muvaffaqiyatsizlik!", (500, 50), background='white', color='black')
+            screen.draw.textbox("Oishga muvaffaqiyatsizlik!", guide_rect)
+
+        pygame.display.update()
+        game.exit()
+    else:
+        screen.draw.textbox("Parolingizni kiriting.", guide_rect)
+
+    # Input textbox
+    screen.draw.filled_rect(input_rect,'pink')
+    screen.draw.textbox(input_text, input_rect)
+
+
+def update():
+    if input_done:
+        if input_text == parol:
+            treasure.sel_image("xazina_sandig'i_o")
+            sounds.olqish.play()
+        else:
             sounds.xavf_ogohlantirish.play()
-            game.exit()
+
 
 def on_key_down(key, unicode):
-    global user_text, input_done
+    global input_text, input_done
 
     if key == keys.RETURN:
         input_done = True
     elif key == keys.BACKSPACE:
-        user_text = user_text[:-1]
+        input_text = input_text[:-1]
     else:
-        user_text += unicode
-
+        input_text += unicode

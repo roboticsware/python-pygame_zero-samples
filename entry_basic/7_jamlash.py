@@ -1,5 +1,5 @@
 from pgzhelper import *
-import random, math
+import random
 
 WIDTH = 960
 HEIGHT = 540
@@ -8,48 +8,59 @@ hammer = Actor("o'yinchoq_bolg'a", (WIDTH / 2, HEIGHT / 2))
 hammer.scale = 0.5
 hammer.angle = 40
 
-GAP_FROM_SCR = 50
-mice = []
-for _ in range(10):
-    mouse = Actor("ko'rsichqon_1")
-    mouse.anchor=('left', 'top')
-    x = random.randint(GAP_FROM_SCR, WIDTH - mouse.width + GAP_FROM_SCR)
-    y = random.randint(GAP_FROM_SCR, HEIGHT - mouse.height + GAP_FROM_SCR)
-    mouse.pos = (x, y)
-    mouse.scale = 0.5
-    mice.append(mouse)
+score = 0
+hammer_pressed = False
 
-ball = 0
-delayed_time = 0
-random_mice = []
+GAP_FROM_SCR = 50
+moles = []
+for _ in range(6):
+    mole = Actor("ko'rsichqon_1")
+    mole.anchor = ('left', 'top')
+    x = random.randint(GAP_FROM_SCR, WIDTH - mole.width + GAP_FROM_SCR)
+    y = random.randint(GAP_FROM_SCR, HEIGHT - mole.height + GAP_FROM_SCR)
+    mole.pos = (x, y)
+    mole.scale = 0.5
+    mole.visible = False
+    moles.append(mole)
+
 
 def draw():
-    global random_mice, delayed_time
+    global score
     screen.blit('dala', (0, 0))
 
-    current_time = pygame.time.get_ticks()
-    if current_time > delayed_time:
-        random_mice = random.sample(mice, math.ceil(len(mice) / 2))
-        delayed_time = current_time + 1000
+    for mole in moles:
+        if mole.visible: 
+            mole.draw()
+        if hammer_pressed and mole.visible and mole.collide_pixel(hammer):
+            sounds.toi.play()
+            moles.remove(mole)
+            score += 1
 
-    for mouse in random_mice:
-        mouse.draw()
     hammer.draw()
-    screen.draw.text('Ball: ' + str(ball), (20, 20), color='black')
+    screen.draw.text('Ball: ' + str(score), (20, 20), color='black')
+
+
+def update():
+    if random.randint(0, 10) == 0:
+        if len(moles) != 0:
+            mole_list = random.sample(moles, 1)
+            mole_list[0].visible = not mole_list[0].visible
+        else:
+            game.exit()
+
 
 def on_mouse_move(pos):
     hammer.centerx, hammer.centery = pos
 
-def on_mouse_down():
-    global ball
 
-    animate(hammer, angle=75, tween='accelerate', duration=0.3, on_finished=animation_done)
-    idx = hammer.collidelist_pixel(mice)
-    if idx != -1:
-        sounds.toi.play()
-        mice.pop(idx)
-        ball += 1
+def on_mouse_down():
+    global hammer_pressed
+    hammer_pressed = True
+    animate(hammer, angle=75, tween='accelerate', duration=0.1, on_finished=animation_done)
+    
 
 def animation_done():
-    animate(hammer, angle=40, tween='accelerate', duration=0.3)
+    global hammer_pressed
+    animate(hammer, angle=40, tween='accelerate', duration=0.1)
+    hammer_pressed = False
 

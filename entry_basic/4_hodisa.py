@@ -13,23 +13,22 @@ eraser.scale = 0.5
 
 def draw():
     screen.fill('white')
-    if drawing:
-        qalam.pen_start(5, 'blue')
-    else:
-        qalam.pen_stop()
-    qalam.pen_update()
-    qalam.draw()
+    pencil.brush_draw()
+    pencil.draw()
     eraser.draw()
+    
+    if drawing is False:
+        pencil.brush_stop()
 
 def on_mouse_move(pos):
-    qalam.left, qalam.bottom = pos
+    pencil.left, pencil.bottom = pos
 
 def on_mouse_down(pos):
     global drawing
     drawing = True
 
     if eraser.collidepoint_pixel(pos):
-        qalam.pen_clear()
+        pencil.brush_clear()
 
 def on_mouse_up():
     global drawing

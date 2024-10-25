@@ -12,6 +12,7 @@ pressed = False
 def draw():
     screen.fill('white')
     bola.draw()
+    game.time.sleep(0.5)
     screen.draw.text('Marta: ' + str(marta), (20, 20), color='black')
 
 def update():
